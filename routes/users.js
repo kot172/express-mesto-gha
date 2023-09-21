@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {
-  getUsers, getUserById, addUser, editUserData, editUserAvatar, } = require('../controllers/users');
+  getUsers, getUserById, addUser, editUserData, editUserAvatar,
+} = require('../controllers/users');
 
 router.get('/', getUsers);
 router.get('/:userId', getUserById);
@@ -9,6 +10,5 @@ router.patch('/me', editUserData);
 router.patch('/me/avatar', editUserAvatar);
 
 module.exports = router;
-
 
 // 2,19

@@ -10,5 +10,3 @@ router.patch('/me', editUserData);
 router.patch('/me/avatar', editUserAvatar);
 
 module.exports = router;
-
-// 2,19

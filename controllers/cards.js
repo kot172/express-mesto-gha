@@ -7,7 +7,7 @@ const {
 module.exports.addCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-  .then((card) => res.send({ data: card }))
+    .then((data) => res.status(createdStatus).send(data))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(badRequestStatus).send({ message: err.message });

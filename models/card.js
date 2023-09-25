@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Опишем схему:
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -15,19 +14,18 @@ const cardSchema = new mongoose.Schema({
       validator(v) {
         return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(v);
       },
-      message: 'Некорректный URL',
+      message: 'Введите URL',
     },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: [true, 'Поле "owner" должно быть заполнено'],
+    required: true,
   },
   likes: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
-      default: [],
     },
   ],
   createdAt: {
@@ -35,5 +33,4 @@ const cardSchema = new mongoose.Schema({
     default: Date.now,
   },
 }, { versionKey: false });
-
 module.exports = mongoose.model('card', cardSchema);

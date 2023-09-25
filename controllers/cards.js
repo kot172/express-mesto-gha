@@ -1,4 +1,4 @@
-const { HTTP_STATUS_OK, HTTP_STATUS_CREATED } = require('http2').constants;
+// const { HTTP_STATUS_OK, HTTP_STATUS_CREATED } = require('http2').constants;
 const httpConstants = require('http2').constants;
 const mongoose = require('mongoose');
 const Card = require('../models/card');
@@ -12,7 +12,19 @@ const NotFoundError = require('../errors/NotFoundError');
 module.exports.addCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((data) => res.status(HTTP_STATUS_CREATED).send(data))
+    .then((card) => {
+      Card.findById(card._id)
+        .orFail()
+        .populate('owner')
+        .then((data) => res.status(httpConstants.HTTP_STATUS_CREATED).send(data))
+        .catch((err) => {
+          if (err instanceof mongoose.Error.DocumentNotFoundError) {
+            next(new NotFoundError('Карточка с указанным _id не найдена.'));
+          } else {
+            next(err);
+          }
+        });
+    })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(err.message));
@@ -24,7 +36,7 @@ module.exports.addCard = (req, res, next) => {
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.status(HTTP_STATUS_OK).send(cards))
+    .then((cards) => res.status(httpConstants.HTTP_STATUS_OK).send(cards))
     .catch(next);
 };
 
@@ -49,7 +61,7 @@ module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail()
     .then((card) => {
-      res.status(HTTP_STATUS_OK).send(card);
+      res.status(httpConstants.HTTP_STATUS_OK).send(card);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {

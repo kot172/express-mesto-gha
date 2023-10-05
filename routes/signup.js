@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const { addUser } = require('../controllers/users')
 const { celebrate, Joi } = require('celebrate');
+const { addUser } = require('../controllers/users');
 const urlRegex = require('../utils/constans');
 
 router.post('/', celebrate({

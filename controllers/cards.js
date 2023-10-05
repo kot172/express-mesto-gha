@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Card = require('../models/card');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
-const ForBiddenError = require('../errors/ForBiddenError')
+const ForBiddenError = require('../errors/ForBiddenError');
 
 module.exports.addCard = (req, res, next) => {
   const { name, link } = req.body;
